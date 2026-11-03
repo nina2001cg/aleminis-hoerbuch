@@ -20,7 +20,17 @@ img { width:min(76%,280px); aspect-ratio:1; object-fit:cover; border-radius:14px
 h1 { margin:0 0 8px; font-size:clamp(1.45rem,6vw,2rem); line-height:1.15; }
 p { color:#c9c9c9; margin:0 0 20px; }
 .player { overflow:hidden; border-radius:12px; background:#fff; min-height:110px; }
-iframe { display:block; width:100%; height:110px; border:0; }
+iframe { display:block; width:100%; height:640px; border:0; border-radius:12px; }
+.player { display:none; margin-top:20px; }
+.player.visible { display:block; }
+.play-link { display:inline-flex; align-items:center; justify-content:center; gap:12px;
+  width:100%; padding:15px 18px; border:0; border-radius:999px; cursor:pointer;
+  background:var(--yellow); color:#111; font:800 1rem/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  box-shadow:0 6px 18px #0006; transition:transform .15s ease, filter .15s ease; }
+.play-link:hover { filter:brightness(1.06); transform:translateY(-1px); }
+.play-circle { display:grid; place-items:center; flex:0 0 30px; width:30px; height:30px;
+  border-radius:50%; background:#111; color:var(--yellow); font-size:.8rem; }
+.play-label { display:inline-block; }
 .note { margin:16px 0 0; font-size:.78rem; color:#aaa; }
 .accent { height:4px; width:64px; background:var(--yellow); border-radius:9px; margin:0 auto 20px; }
 </style>
@@ -32,11 +42,27 @@ iframe { display:block; width:100%; height:110px; border:0; }
   <div class="eyebrow">Dein Hörbuch</div>
   <h1>Die Aleminis und die<br>verschwundene Stadionuhr</h1>
   <p>Zurücklehnen und eintauchen. Schwarz-gelbe Hörbuchzeit!</p>
-  <a class="play-link" href="https://drive.google.com/file/d/1lb70KZviL5BDk_eyKByo2RNx2uQsW4Tc/view?usp=sharing" target="_blank" rel="noopener">
+  <button class="play-link" id="listenButton" type="button" aria-expanded="false" aria-controls="audioPlayer">
     <span class="play-circle" aria-hidden="true">▶</span>
     <span class="play-label">Hörbuch jetzt anhören</span>
-  </a>
-  <div class="note">Tippe auf den Button. Das Hörbuch öffnet sich anschließend in Google Drive bzw. Safari. Dort kannst du die Wiedergabe starten.</div>
+  </button>
+  <div class="player" id="audioPlayer">
+    <iframe src="https://lisview.com/die-aleminis-und-die-verschwundene-stadionuhr-rdyv5fga?embed=1" title="Die Aleminis und die verschwundene Stadionuhr – Hörbuchplayer" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="note" id="playerNote">Tippe auf den gelben Button, um den Hörbuchplayer hier auf der Seite zu öffnen.</div>
+  <script>
+    const listenButton = document.getElementById('listenButton');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playerNote = document.getElementById('playerNote');
+    listenButton.addEventListener('click', () => {
+      const isOpen = audioPlayer.classList.toggle('visible');
+      listenButton.setAttribute('aria-expanded', String(isOpen));
+      playerNote.textContent = isOpen
+        ? 'Viel Spaß beim Zuhören! Du kannst die Wiedergabe direkt im Player starten.'
+        : 'Tippe auf den gelben Button, um den Hörbuchplayer hier auf der Seite zu öffnen.';
+      if (isOpen) audioPlayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
 </main>
 </body>
 </html>
